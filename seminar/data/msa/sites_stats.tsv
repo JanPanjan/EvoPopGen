@@ -1,0 +1,5 @@
+C	V	Pi	S	Length	Alignment
+1337	482	177	300	2064	msl_rc_fas
+1326	495	178	309	2056	mafft_rc_20PAM.fas
+1117	287	114	173	1409	msl_rc_full_trim.fas
+282	1122	154	968	1422	mafft_rc_20PAM_full_trim.fas

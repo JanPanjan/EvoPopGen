@@ -1,0 +1,10 @@
+.Ruserdata
+.RData
+.Rhistory
+.Rprofile
+renv/
+*.Rproj
+.Rproj.user/# pixi environments
+.pixi/*
+!.pixi/config.toml
+.Rproj.user

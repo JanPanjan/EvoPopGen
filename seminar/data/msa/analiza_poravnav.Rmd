@@ -1,0 +1,220 @@
+---
+title: "Analiza Poravnav Mafft in Muscle algoritmov"
+output: 
+  html_document:
+    # code_folding: hide
+---
+
+```{r, results='hide', message=FALSE, warning=FALSE}
+library(ggplot2)
+library(patchwork)
+library(gridExtra)
+library(dplyr)
+```
+
+# Nalaganje podatkov
+
+```{r}
+files <- list.files(path = getwd(), pattern = "tsv", recursive = TRUE)
+selected_files <- files[grep(x = files, pattern = "muscle|mafft")]
+selected_files
+```
+
+```{r}
+load_tsv <- function(file_path) {
+  read.delim(file_path,
+             header = TRUE,
+             sep = "\t",
+             stringsAsFactors = FALSE,
+             dec = ".")
+}
+```
+
+## mafft dataseti:
+
+```{r}
+mafft <- list()
+
+grep(x = selected_files, pattern = "mafft") |>
+  sapply(\(x) {
+    name <- selected_files[x]
+    mafft[[name]] <<- load_tsv(name)
+  })
+```
+
+## muscle dataseti:
+
+```{r}
+muscle  <- list()
+
+grep(x = selected_files, pattern =  "muscle") |>
+  sapply(\(x) {
+    name <- selected_files[x]
+    muscle[[name]] <<- load_tsv(name)
+  })
+```
+
+> Datasets imajo 42 zaporedij, ker je zraven še `consensus` zaporedje.
+
+# Povzetki
+
+```{r}
+summ_col <- function(df, col) {
+  cat(col, "\n")
+  col <- df[, col]
+  print(c(Min    = min(col),
+          Q1     = quantile(col, 0.25),
+          Median = median(col),
+          Q1     = quantile(col, 0.75),
+          Max    = max(col)))
+  cat("\n")
+}
+```
+
+```{r}
+summ_col2 <- function(df, col) {
+  col <- df[, col]
+  c(Min    = min(col),
+    Q1     = quantile(col, 0.25),
+    Median = median(col),
+    Q1     = quantile(col, 0.75),
+    Max    = max(col))
+}
+```
+
+```{r}
+cols <- c("Identity", "Coverage", "Mismatches")
+```
+
+---
+
+## Mafft
+
+```{r}
+purrr::walk(names(mafft), \(x) {
+  cat("file: ", x, "\n\n")
+  d <- mafft[[x]]
+  purrr::walk(cols, summ_col, df = d)
+  cat("------------------------------------------\n\n")
+})
+```
+
+### Razlike med 200PAM in 20PAM poravnavo
+
+```{r, results='hold'}
+name_pam200 <- names(mafft) |> grep(pattern = "200PAM_stats")
+name_pam20  <- names(mafft) |> grep(pattern = "20PAM_stats")
+cat(names(mafft)[name_pam200], "-", names(mafft)[name_pam20], "\n\n")
+
+purrr::walk(cols, \(x) {
+  mafft_pam200 <- mafft[[name_pam200]][, x]
+  mafft_pam20  <- mafft[[name_pam20]][, x]
+
+  diff <- mean(mafft_pam200) - mean(mafft_pam20)
+  cat(x, ":", diff, "\n")
+})
+```
+
+### Razlike med neprečiščeno 20PAM in prečiščeno 20PAM
+
+```{r, results='hold'}
+name_pam20_clean <- names(mafft) |> grep(pattern = "full_trim")
+name_pam20_raw   <- names(mafft) |> grep(pattern = "20PAM_stats")
+cat(names(mafft)[name_pam20_clean], "-", names(mafft)[name_pam20_raw], "\n\n")
+
+purrr::walk(cols, \(x) {
+  mafft_pam20_clean <- mafft[[name_pam20_clean]][, x]
+  mafft_pam20_raw   <- mafft[[name_pam20_raw]][, x]
+
+  diff <- mean(mafft_pam20_clean) - mean(mafft_pam20_raw)
+  cat(x, ":", diff, "\n")
+})
+```
+
+## Muscle
+
+### Razlike med neprečiščeno in prečiščeno Muscle poravnavo
+
+```{r}
+purrr::walk(names(muscle), \(x) {
+  cat("file: ", x, "\n\n")
+  d <- muscle[[x]]
+  purrr::walk(cols, summ_col, df = d)
+  cat("------------------------------------------\n\n")
+})
+```
+
+```{r, results='hold'}
+name_clean <- names(muscle) |> grep(pattern = "full_trim")
+name_raw   <- names(muscle) |> grep(pattern = "msl_rc_stats.tsv")
+cat(names(muscle)[name_clean], "-", names(muscle)[name_raw], "\n\n")
+
+purrr::walk(cols, \(x) {
+  msl_clean <- muscle[[name_clean]][, x]
+  msl_raw   <- muscle[[name_raw]][, x]
+
+  diff <- mean(msl_clean) - mean(msl_raw)
+  cat(x, ":", diff, "\n")
+})
+```
+
+## Primerjava prečiščenih poravnav Mafft in Muscle
+
+```{r, results='hold'}
+name_mafft_clean <- names(mafft) |> grep(pattern = "full_trim")
+name_msl_clean <- names(muscle) |> grep(pattern = "full_trim")
+cat(names(mafft)[name_mafft_clean], "-", names(muscle)[name_msl_clean], "\n\n")
+
+purrr::walk(cols, \(x) {
+  mafft_clean <- mafft[[name_mafft_clean]][, x]
+  msl_clean   <- muscle[[name_msl_clean]][, x]
+
+  diff <- mean(mafft_clean) - mean(msl_clean)
+  cat(x, ":", diff, "\n")
+})
+```
+
+# Ohranjena in variabilna mesta
+
+```{r}
+filepath <- list.files(path = getwd(),
+                       pattern = "sites_stats.tsv",
+                       recursive = TRUE)
+sites <- load_tsv(filepath)
+sites
+```
+
+```{r}
+calc_percentage <- function(df, col, len_col) {
+  col_vals <- select(df, all_of(col)) |> unlist()
+  len_vals <- select(df, all_of(len_col)) |> unlist()
+  sapply(seq_len(nrow(df)), \(x) {
+    round((col_vals[x] / len_vals[x]) * 100, digits = 2)
+  })
+}
+```
+
+```{r}
+lc <- "Length"
+
+sites |>
+  mutate(
+    C_per  = calc_percentage(sites, "C", lc),
+    V_per  = calc_percentage(sites, "V", lc),
+    Pi_per = calc_percentage(sites, "Pi", lc),
+    S_per  = calc_percentage(sites, "S", lc)
+  ) |>
+  select(C_per, V_per, Pi_per, S_per, Alignment)
+```
+
+```{r}
+sites |>
+  mutate(
+    C_per  = calc_percentage(sites, "C", lc),
+    V_per  = calc_percentage(sites, "V", lc),
+    Pi_per = calc_percentage(sites, "Pi", lc),
+    S_per  = calc_percentage(sites, "S", lc)
+  ) |>
+  select(C_per, V_per, Pi_per, S_per, Alignment) %>%
+  .[c(3, 4), ]
+```

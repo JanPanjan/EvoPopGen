@@ -1,0 +1,59 @@
+
+ Hydrocharitaceae 
+
+   Accession   TaxId                Place.of.sample                               Species
+1   AY952399   51024                          China                 Hydrilla verticillata
+2   AY952398   62340                          China                     Hydrocharis dubia
+3   AY952384  451758                          China                  Vallisneria asiatica
+4   AF069201   29649                       New York                 Vallisneria americana
+5   EF526347   62343               Connecticut, USA                           Najas minor
+6   EF526335  403037               Connecticut, USA                   Najas guadalupensis
+10  AY952403   55455                          China                     Enhalus acoroides
+11  AF168878   55497                       New York                  Thalassia testudinum
+12  AY952400   62339                          China                      Halophila ovalis
+23  JQ041644   55455 Present study, Palk Bay, India                     Enhalus acoroides
+24  JQ041656   55496                                                 Thalassia hemprichii
+25  JQ041658   62339 Present study, Palk Bay, India        Halophila ovalis subsp. ovalis
+26  JQ041652 1137756                  Present study Halophila ovalis subsp. ramamurthiana
+27  JQ041659  180126                  Present study                       Halophila ovata
+28  JQ041661   55459                  Present study                   Halophila decipiens
+29  JQ041646  180123                  Present study                    Halophila beccarii
+30  JQ041643   83836                  Present study                  Halophila stipulacea
+
+ Cymodoceaceae 
+
+   Accession   TaxId                Place.of.sample                  Species
+13  AY952401  319738                          China       Halodule uninervis
+14  AF168876   29648                       New York    Syringodium filiforme
+21  JN034103   29652                          China          Ruppia maritima
+31  JQ041655   55449                  Present study      Cymodocea serrulata
+32  JQ041654 1046423                  Present study      Cymodocea rotundata
+33  JQ041657  319738                  Present study       Halodule uninervis
+34  JQ041645   55315                  Present study       Halodule pinifolia
+35  JQ041660   13078                  Present study        Halodule wrightii
+36  JQ041653   55323 Present study, Palk Bay, India Syringodium isoetifolium
+
+ Posidoniaceae 
+
+   Accession TaxId Place.of.sample             Species
+15  AY491942 55489  Leghorn, Italy  Posidonia oceanica
+16  GQ497582 55488          Sweden Posidonia australis
+
+ Zosteraceae 
+
+   Accession  TaxId                    Place.of.sample                Species
+18  AF207058  55326                                USA         Zostera noltii
+19  HQ660595 214525                              Korea Phyllospadix iwatensis
+37  JQ041647  29655 Present study, Wadden Sea, Germany   Zostera marina (Wd1)
+38  JQ041648  29655 Present study, Wadden Sea, Germany   Zostera marina (Wd2)
+39  JQ041649  29655 Present study, Wadden Sea, Germany   Zostera marina (Wd3)
+40  JQ041650  55326 Present study, Wadden Sea, Germany   Zostera noltii (Wd1)
+41  JQ041651  55326 Present study, Wadden Sea, Germany   Zostera noltii (Wd3)
+
+ Potamogetonaceae 
+
+   Accession  TaxId  Place.of.sample                Species
+7   EF526336 189328 Connecticut, USA     Potamogeton natans
+8   EF526353 246702 Connecticut, USA   Potamogeton pusillus
+9   EF526318  55318 Connecticut, USA    Potamogeton crispus
+20  AF168883  29654         New York Zannichellia palustris

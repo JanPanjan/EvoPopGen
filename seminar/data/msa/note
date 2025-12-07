@@ -1,0 +1,1 @@
+`msa.fas` je kopija `msl_rc_full_trim.fas`
